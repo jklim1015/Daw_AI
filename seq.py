@@ -3,10 +3,10 @@ import wave
 from dataclasses import dataclass, field
 import re
 from typing import List
-import numpy as np # type: ignore
+import numpy as np
 import uuid
-import sounddevice as sd # type: ignore
-from scipy.io import wavfile # type: ignore
+import sounddevice as sd
+from scipy.io import wavfile
 import json
 import io
 import soundfile as sf
@@ -24,22 +24,18 @@ note_re = re.compile(r'^([A-Ga-g])([#B]?)(-?\d+)$')
 
 def load_wav(filename):
     sr, audio = wavfile.read(filename)
-    # Convert to float32 in range [-1, 1]
     if audio.dtype == np.int16:
         audio = audio.astype(np.float32) / 32767
     elif audio.dtype == np.int32:
         audio = audio.astype(np.float32) / (2 ** 23)
     elif audio.dtype == np.uint8:
         audio = (audio.astype(np.float32) - 128) / 128
-    # If stereo, convert to mono
     if audio.ndim == 2:
         audio = audio.mean(axis=1)
     return audio, sr
 
 def note_to_freq(note: str) -> float:
     n = note.strip().upper()
-    if n == 'REST':
-        return 0.0
     m = note_re.match(n)
     if not m:
         raise ValueError(f"Bad note format: {note}")
