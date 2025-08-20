@@ -1,0 +1,12 @@
+# Python
+__pycache__/
+*.pyc
+.env
+
+# Node/React
+daw-ui/node_modules/
+daw-ui/build/
+daw-ui/dist/
+
+# OS
+.DS_Store
